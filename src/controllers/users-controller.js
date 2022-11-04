@@ -1,5 +1,8 @@
+const userService = require("../services/userService")
+
 const getAllUsers = ( req , res ) =>{
-    res.status(200).json({status:"ok"})
+    const allUsers = userService.getAllUsers()
+    res.status(200).json( { status:"ok", data:allUsers } )
 }
 
 const getSelectedUser=  ( req , res , next ) => {
@@ -15,15 +18,19 @@ const createNewUser=  ( req , res , next ) => {
     try { 
         const { name , age , email , country } = req.body
         if(!name || !age || !email || !country ) {
-            res.json({ 
+            res.status(400).json({ 
                 status: "error" , 
-                err: "You must fill all the fields" , 
-                reason:"Fields: name , email , age . or country are empty"
+                error: "You must fill all the fields" , 
+                reason: "Fields: name , email , age . or country are empty"
             })
-        } else {
-            // servicio crear usuario
-            res.status(201).json({msg: "user successfully created"})
+        } 
+        const newUser = {
+            name: name,
+            age: age,
+            email: email,
+            country: country
         }
+        res.status(201).json({msg: "user successfully created"})
     } catch (error) { 
         //content
     }
